@@ -18,7 +18,7 @@ public class Group {
         this.members = new ArrayList<Member>();
     }
 
-    public void setMember(Member m) {
+    public synchronized void setMember(Member m) {
         this.members.add(m);
     }
 
@@ -29,7 +29,7 @@ public class Group {
     /**
      * busca por pelo mebro que possue o ip e depois deleta ele do grupo
      * **/
-    public void removeMember(String ip){
+    public synchronized void removeMember(String ip){
         Iterator it = this.members.iterator();
         while (it.hasNext()){
             Member m = (Member) it.next();
@@ -42,7 +42,7 @@ public class Group {
      * Metodo responsavel por fazer buscas no grupo por ip, ou seja,
      * ele fará busca por ip para pegar as informações globais
      * **/
-    public Member getMemberForIp(String ip){
+    public synchronized Member getMemberForIp(String ip){
         Iterator it = this.members.iterator();
 
         while(it.hasNext()){
