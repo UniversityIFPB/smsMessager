@@ -19,6 +19,7 @@ public class ThreadServerUser implements Runnable{
     public void run() {
         try{
 
+          while(true){
             //pegando aas informações que o servidor mandou
             DataInputStream in = new DataInputStream(this.s.getInputStream());
             this.work = in.readUTF();
@@ -28,6 +29,7 @@ public class ThreadServerUser implements Runnable{
             // to só fazendo echo
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
             out.writeUTF(work);
+          }
 
         }catch (Exception e){
             System.out.print(e.getMessage());
