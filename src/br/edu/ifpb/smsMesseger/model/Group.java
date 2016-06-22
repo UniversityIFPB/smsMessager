@@ -1,4 +1,4 @@
-package br.edu.ifpb.smsMesseger.br.edu.ifpb.smsMesseger.model;
+package br.edu.ifpb.smsMesseger.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,4 +54,23 @@ public class Group {
 
         return null;
     }
+
+    /**
+     * Metodo responsavel por fazer buscas no grupo por ip, ou seja,
+     * ele fará busca por ip para pegar as informações globais
+     * **/
+    public synchronized Member getMemberForName(String name){
+        Iterator it = this.members.iterator();
+
+        while(it.hasNext()){
+            Member m = (Member) it.next();
+
+            if(m.getName().equals(name))
+                return m;
+        }
+
+        return null;
+    }
+
+
 }

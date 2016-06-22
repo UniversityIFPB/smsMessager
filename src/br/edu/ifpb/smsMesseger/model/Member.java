@@ -1,4 +1,4 @@
-package br.edu.ifpb.smsMesseger.br.edu.ifpb.smsMesseger.model;
+package br.edu.ifpb.smsMesseger.model;
 
 /**
  * Created by root on 17/06/16.
@@ -18,5 +18,9 @@ public class Member {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

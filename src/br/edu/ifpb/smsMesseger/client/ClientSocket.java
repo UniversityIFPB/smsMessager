@@ -16,30 +16,33 @@ public class ClientSocket {
             //classe responsavel por ler o teclado
             BufferedReader inWork = new BufferedReader(new InputStreamReader(System.in));
             //palavras digitadas pelo terminal
-            String work = " ";
+            String work = "";
 
             //condicionais iniciais para informar e preparar o cliente para as ações do servidor
             if(socket.isConnected())
-                System.out.print("\nServidor conectado!!");
+                System.out.print("\n----------- > Cliente conectado!! < ------------\n\n");
             else {
                 socket.close();
                 //verificando e mandando mensagem de fechamento para o cliente
                 if(socket.isClosed())
-                    System.out.print("\n - Fechado!!");
+                    System.out.print("\n -> Cliente fechado!! < - ");
             }
 
+            //pegando aas informações que o servidor mandou que é perguntando o nome meu.
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            System.out.print(in.readUTF());
 
             while(true){
 
                 work = inWork.readLine();
-                System.out.println("Você digitou: " + work);
+                //System.out.println("Você digitou: " + work);
 
                 //enviando informações para o servidor
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                 out.writeUTF(work);
 
                 //pegando aas informações que o servidor mandou
-                DataInputStream in = new DataInputStream(socket.getInputStream());
+                in = new DataInputStream(socket.getInputStream());
                 System.out.print(in.readUTF());
 
             }

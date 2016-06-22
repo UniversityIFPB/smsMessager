@@ -1,6 +1,7 @@
 package br.edu.ifpb.smsMesseger.server;
 
 import br.edu.ifpb.smsMesseger.Thread.ThreadServerUser;
+import br.edu.ifpb.smsMesseger.model.Group;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,12 +16,14 @@ public class SocketServer {
         try{
 
             ServerSocket server = new ServerSocket(56789);
+            //criando grupo de pessoas
+            Group g = new Group("ifpb");
 
             while(true){
                 Socket s = server.accept();
 
                 //passando para tread a execução do parametros de leituda e escrita
-                new Thread(new ThreadServerUser(s)).start();
+                new Thread(new ThreadServerUser(s,g)).start();
 
             }
         }catch(Exception e){
