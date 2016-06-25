@@ -12,10 +12,12 @@ import java.util.List;
 public class Group {
     private String name;
     private List members;
+    private List msg;
 
     public Group(String name){
         this.name = name;
         this.members = new ArrayList<Member>();
+        this.msg = new ArrayList<String>();
     }
 
     public synchronized void setMember(Member m) {
@@ -38,6 +40,28 @@ public class Group {
                 this.members.remove(m);
         }
     }
+    /**
+     * metodo responsavel por adicinar as mensagens globais para todos verem
+     * **/
+    public synchronized void setMessage(String msg){
+        this.msg.add(msg);
+    }
+
+    /**
+     * metodo responsavel por pegar todos as mensagens
+     * enviadas para o global
+     * **/
+    public String getMessagesGlobal(){
+        return (String) this.msg.get(this.msg.size() - 1);
+    }
+
+    /**
+     * lista completa de todas as mensagens
+     * **/
+    public List getMsg() {
+        return msg;
+    }
+
     /**
      * Metodo responsavel por fazer buscas no grupo por ip, ou seja,
      * ele fará busca por ip para pegar as informações globais

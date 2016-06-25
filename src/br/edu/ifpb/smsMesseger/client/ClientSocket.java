@@ -20,7 +20,7 @@ public class ClientSocket {
 
             //condicionais iniciais para informar e preparar o cliente para as ações do servidor
             if(socket.isConnected())
-                System.out.print("\n----------- > Cliente conectado!! < ------------\n\n");
+                System.out.print("\n----------- > Bem vindo ao chat!! < ------------\n\n");
             else {
                 socket.close();
                 //verificando e mandando mensagem de fechamento para o cliente
