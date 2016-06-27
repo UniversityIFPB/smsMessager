@@ -96,5 +96,30 @@ public class Group {
         return null;
     }
 
+    /**
+     * apresenta a lista de nomes de todos so usuarios logados no momento
+     * **/
+
+    public synchronized String getListMember(){
+        String nomes = "";
+        Iterator it = this.members.iterator();
+
+        while(it.hasNext()){
+            Member m = (Member) it.next();
+
+            nomes += m.getName()+"\n";
+        }
+
+        return nomes;
+    }
+
+    /**
+     * esse metodo é responsavel por renomear o membro do grupo
+     * **/
+
+    public synchronized void renameMember(String old, String novo){
+        Member m = this.getMemberForName(old);
+        m.setName(novo);
+    }
 
 }

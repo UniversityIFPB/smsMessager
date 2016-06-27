@@ -7,9 +7,6 @@ import br.edu.ifpb.smsMesseger.util.Util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -33,16 +30,6 @@ public class ThreadServerUser implements Runnable{
         this.countRegisterIndividual = 0;
     }
 
-    /**
-     * metodo usado basicamente para dormatar a data a ser apresentada
-     * direitos : http://www.guj.com.br/t/pegar-data-hora-sistema/76055/9
-     * author: rogerpsantos
-     * **/
-    private String get_date_time() {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
 
     /**
      * metodo responsavel por atualizar o clinte cmo as
@@ -58,7 +45,6 @@ public class ThreadServerUser implements Runnable{
                 String ss = (String) it.next();
                 str += ss;
             }
-
 
             this.countRegisterGlobal = this.g.getMsg().size();
         }else if(this.g.getMsg().size() != this.countRegisterGlobal){
@@ -127,8 +113,8 @@ public class ThreadServerUser implements Runnable{
 
                 //update de mensagens envidas pelos outros cliente
                 //out.writeUTF(this.update_messages());
+                //out.writeUTF("rorando na thread do server");
 
-                System.out.print("\n rodando");
 
                 //pegando a informação do cliente
                 this.work = in.readUTF();
@@ -140,7 +126,7 @@ public class ThreadServerUser implements Runnable{
                 if((param[0].equals("send")) && (param[1].equals("-all"))){
 
                     //gravando a mensagem
-                    this.g.setMessage(s.getInetAddress()+":"+s.getPort()+"/~"+this.member.getName()+" : "+Util.prepare_commnads(this.work.toLowerCase())+" "+this.get_date_time()+"\n");
+                    this.g.setMessage(s.getInetAddress()+":"+s.getPort()+"/~"+this.member.getName()+" : "+Util.prepare_commnads(this.work.toLowerCase())+" "+Util.get_date_time()+"\n");
 
                     //enviando para o cliente a ultima mensagem enviada
                     out.writeUTF(this.g.getMessagesGlobal());
@@ -154,13 +140,25 @@ public class ThreadServerUser implements Runnable{
                     }
 
                     //setando a mensagem individual para o usuario.
-                    m.setMsg(s.getInetAddress()+":"+s.getPort()+"/~"+this.member.getName()+" : "+param[2]+" "+this.get_date_time()+"\n");
+                    m.setMsg(s.getInetAddress()+":"+s.getPort()+"/~"+this.member.getName()+" : "+param[2]+" "+Util.get_date_time()+"\n");
 
+                }else if(param[0].equals("list")){//mandando pra o cliente as informações dos usuarios logados
+
+                    if(this.g.getListMember() == null)
+                        out.writeUTF("\n\nNão há nenhum usuário cadastrado.\n");
+                    else
+                        out.writeUTF(this.g.getListMember());
+                }else if(param[0].equals("rename")){
+
+                    Member m = this.g.getMemberForName(param[1]);
+
+                    if(m == null){
+                        this.g.renameMember(this.member.getName(), param[1]);
+                        out.writeUTF("\n\nRenomeado com sucesso!!\n");
+                    }
+                    else
+                        out.writeUTF("\n\nNome de usuário já em uso.\n");
                 }
-
-
-
-
             }
 
         }catch (Exception e){
