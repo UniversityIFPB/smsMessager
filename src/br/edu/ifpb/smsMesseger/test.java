@@ -7,7 +7,12 @@ import java.util.ArrayList;
  */
 public class test {
     public static void main(String[] args) {
+        ArrayList<String> s = new ArrayList<String>();
 
+        s.add("oier");
+        s.add("oier2");
+
+        System.out.print(s.get(1));
     }
 
 

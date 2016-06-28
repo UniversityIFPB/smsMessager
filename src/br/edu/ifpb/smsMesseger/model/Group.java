@@ -12,7 +12,7 @@ import java.util.List;
 public class Group {
     private String name;
     private List members;
-    private List msg;
+    private ArrayList<String> msg;
 
     public Group(String name){
         this.name = name;
@@ -51,14 +51,18 @@ public class Group {
      * metodo responsavel por pegar todos as mensagens
      * enviadas para o global
      * **/
-    public String getMessagesGlobal(){
-        return (String) this.msg.get(this.msg.size() - 1);
+    public synchronized String getMessagesGlobal(){
+        if(this.getMsg().size() > 0)
+            return (String) this.msg.get(this.msg.size() - 1);
+
+        return null;
+
     }
 
     /**
      * lista completa de todas as mensagens
      * **/
-    public List getMsg() {
+    public synchronized List getMsg() {
         return msg;
     }
 

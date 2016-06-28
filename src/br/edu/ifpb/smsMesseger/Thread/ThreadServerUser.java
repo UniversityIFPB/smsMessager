@@ -6,6 +6,7 @@ import br.edu.ifpb.smsMesseger.util.Util;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
 
@@ -14,11 +15,13 @@ import java.util.Iterator;
  */
 public class ThreadServerUser implements Runnable{
     private String work;
-    private Socket s;
+    protected Socket s;
     private Member member;
-    private Group g;
+    protected Group g;
     private int countRegisterGlobal;
     private int countRegisterIndividual;
+    private DataOutputStream out;
+
 
     public ThreadServerUser(Socket s, Group g){
         this.s = s;
@@ -35,23 +38,12 @@ public class ThreadServerUser implements Runnable{
      * metodo responsavel por atualizar o clinte cmo as
      * infoamções novas.
      * **/
-    private String update_messages(){
-        String str = "";
+    public synchronized String update_messages(){
+        String str = " ";
 
-        //caso ele não tenha imprimido nada ele vai mostrar tudo
         if(this.countRegisterGlobal == 0){
-            Iterator it = this.g.getMsg().iterator();
-            while(it.hasNext()){
-                String ss = (String) it.next();
-                str += ss;
-            }
-
-            this.countRegisterGlobal = this.g.getMsg().size();
-        }else if(this.g.getMsg().size() != this.countRegisterGlobal){
-            int total = this.g.getMsg().size();
-            //pega só as ultimas onde enseridas que não foram mostradas para o cliente
-            for(int size = this.countRegisterGlobal; total > size; total--){
-                str += this.g.getMsg().get(total);
+            for(Object ss: this.g.getMsg()){
+                str += (String) ss;
             }
         }
 
@@ -104,23 +96,26 @@ public class ThreadServerUser implements Runnable{
             //ruperando ou criando user
             this.auth_login();
 
+            //pegando aas informações que o servidor mandou
+            DataInputStream in = new DataInputStream(this.s.getInputStream());
+            //enviando informações para o servidor
+            out = new DataOutputStream(s.getOutputStream());
+
+            //out.writeUTF(update_messages());
+
             while(true){
 
-                //pegando aas informações que o servidor mandou
-                DataInputStream in = new DataInputStream(this.s.getInputStream());
-                //enviando informações para o servidor
-                DataOutputStream out = new DataOutputStream(s.getOutputStream());
-
-                //update de mensagens envidas pelos outros cliente
-                //out.writeUTF(this.update_messages());
-                //out.writeUTF("rorando na thread do server");
 
 
                 //pegando a informação do cliente
                 this.work = in.readUTF();
 
+                System.out.print(this.work);
+
                 //quebra a string que é enviada pelo usuario e quebra os parametros
                 String[] param = this.work.toLowerCase().split(" ");
+
+
 
                 //pegando os oparametros que é "send -all"
                 if((param[0].equals("send")) && (param[1].equals("-all"))){
@@ -158,6 +153,14 @@ public class ThreadServerUser implements Runnable{
                     }
                     else
                         out.writeUTF("\n\nNome de usuário já em uso.\n");
+                }else if(param[0].equals("bye")){ //remove e desconectao usuario do grupo
+
+                    out.writeUTF("\n\n --- >Removido com sucesso!!< --- \n");
+                    this.g.removeMember(this.member.getIp());
+                    out.writeUTF("[close]");
+
+                }else{
+                    out.writeUTF("Comando não encontrado.");
                 }
             }
 
